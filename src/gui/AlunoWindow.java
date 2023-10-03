@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import entities.Aluno;
 import service.AlunoService;
 
-public class AlunoGUI extends JFrame {
+public class AlunoWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -42,7 +42,7 @@ public class AlunoGUI extends JFrame {
 	private JRadioButton rbFeminino;
 	private JRadioButton rbNaoInformado;
 
-	public AlunoGUI() {
+	public AlunoWindow() {
 
 		setTitle("Aluno");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -285,7 +285,7 @@ public class AlunoGUI extends JFrame {
 		
 		} catch (SQLException | IOException e) {
 			
-			JOptionPane.showMessageDialog(null, "Erro ao editar um aluno", "Erro Edição", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Erro ao excluir um aluno", "Erro Edição", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -306,7 +306,7 @@ public class AlunoGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AlunoGUI frame = new AlunoGUI();
+					AlunoWindow frame = new AlunoWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
