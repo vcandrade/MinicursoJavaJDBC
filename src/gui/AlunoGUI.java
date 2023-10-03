@@ -41,9 +41,9 @@ public class AlunoGUI extends JFrame {
 	private JRadioButton rbMasculino;
 	private JRadioButton rbFeminino;
 	private JRadioButton rbNaoInformado;
-	
+
 	public AlunoGUI() {
-		
+
 		setTitle("Aluno");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1002, 491);
@@ -136,7 +136,7 @@ public class AlunoGUI extends JFrame {
 
 		tblAlunos = new JTable();
 		tblAlunos.setModel(
-				new DefaultTableModel(new Object[][] {}, new String[] { "Ra", "Nome Completo", "Sexo", "Curso" }));
+				new DefaultTableModel(new Object[][] {}, new String[] { "Ra", "Nome Completo", "Curso", "Sexo" }));
 		scrollPane.setViewportView(tblAlunos);
 
 		JButton btnCadastrar = new JButton("Cadastrar");
@@ -159,18 +159,18 @@ public class AlunoGUI extends JFrame {
 		btnLimparCampos.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnLimparCampos.setBounds(776, 374, 189, 45);
 		contentPane.add(btnLimparCampos);
-		
+
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				atualizarCadastroAluno();
 			}
 		});
 		btnEditar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEditar.setBounds(776, 79, 189, 45);
 		contentPane.add(btnEditar);
-		
+
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -180,40 +180,128 @@ public class AlunoGUI extends JFrame {
 		btnExcluir.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnExcluir.setBounds(776, 135, 189, 45);
 		contentPane.add(btnExcluir);
-		
+
 		this.atualizarTabela();
 	}
 
 	public void cadastrarNovoAluno() {
 
+		try {
+
+			Aluno aluno = new Aluno();
+
+			aluno.setRa(Integer.parseInt(this.txtRA.getText()));
+			aluno.setNome(this.txtNome.getText());
+			aluno.setCurso(this.txtCurso.getText());
+
+			if (this.rbMasculino.isSelected()) {
+
+				aluno.setSexo("Masculino");
+
+			} else if (this.rbFeminino.isSelected()) {
+
+				aluno.setSexo("Feminino");
+
+			} else {
+
+				aluno.setSexo("Não informado");
+			}
+
+			AlunoService alunoService = new AlunoService();
+			alunoService.cadastrar(aluno);
+			
+			this.atualizarTabela();
 		
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao cadastrar um aluno", "Erro Cadastro", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void atualizarTabela() {
 
+		try {
 		
+			AlunoService alunoService = new AlunoService();
+			List<Aluno> alunos = alunoService.buscarAlunos();
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblAlunos.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+			
+			for (Aluno aluno : alunos) {
+	
+				modelo.addRow(new Object[] { aluno.getRa(), aluno.getNome(), aluno.getCurso(), aluno.getSexo() });
+			}
+			
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao buscar alunos cadastrados", "Erro Busca", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void atualizarCadastroAluno() {
 		
+		try {
+
+			Aluno aluno = new Aluno();
+
+			aluno.setRa(Integer.parseInt(this.txtRA.getText()));
+			aluno.setNome(this.txtNome.getText());
+			aluno.setCurso(this.txtCurso.getText());
+
+			if (this.rbMasculino.isSelected()) {
+
+				aluno.setSexo("Masculino");
+
+			} else if (this.rbFeminino.isSelected()) {
+
+				aluno.setSexo("Feminino");
+
+			} else {
+
+				aluno.setSexo("Não informado");
+			}
+
+			AlunoService alunoService = new AlunoService();
+			alunoService.atualizar(aluno);
+			
+			this.atualizarTabela();
 		
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao editar um aluno", "Erro Edição", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void excluirCadastroAluno() {
 		
+		try {
+			
+			AlunoService alunoService = new AlunoService();
+			alunoService.excluir(Integer.parseInt(this.txtRA.getText()));
+			
+			this.atualizarTabela();
 		
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao editar um aluno", "Erro Edição", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public void limparCampos() {
 		
-		
+		this.txtRA.setText("");
+		this.txtNome.setText("");
+		this.txtCurso.setText("");
+		this.rbMasculino.setSelected(true);
 	}
 	
 	public void finalizarPrograma() {
 		
-		
+		System.exit(0);
 	}
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
